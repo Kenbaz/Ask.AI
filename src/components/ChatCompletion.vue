@@ -219,7 +219,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="main-container h-screen">
+  <div class="main-container border overflow-hidden h-screen">
     <font-awesome-icon
       @click="toggleSidebar"
       class="z-10 toggle-btn h-[23px] hover:bg-hover_color2 hover:rounded-lg hidden lg:block"
