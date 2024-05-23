@@ -268,10 +268,10 @@ onUnmounted(() => {
         >
       </button>
       <div
-        class="h-[98%] overflow-hidden mt-1 w-11/12 m-auto lg:w-[600px] xl:w-[800px]"
+        class="inner-content-container h-[89%] overflow-hidden mt-1 w-11/12 m-auto lg:h-[87%] lg:w-[600px] xl:w-[800px] xl:h-[89%]"
       >
         <div
-          class="inner-content mt-12 h-[84%] md:mt-16 lg:mt-0 lg:h-[89%] lg:rounded-xl xl:h-[91%]"
+          class="inner-content overflow-hidden mt-[14%] h-[94.2%] md:mt-16 lg:mt-0 lg:h-full lg:rounded-xl xl:h-full"
           ref="responseContainer"
         >
           <div
@@ -303,8 +303,10 @@ onUnmounted(() => {
             <button @click="regenerateResponse(prompt)">Regenerate</button>
           </div>
         </div>
-        <div
-          class="input-section h-[60px] rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:h-[60px] lg:rounded-[40px]"
+    
+      </div> <!--inner-content container stop-->
+      <div
+          class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
         >
           <textarea
             ref="inputField"
@@ -321,7 +323,6 @@ onUnmounted(() => {
             Ask
           </button>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -340,9 +341,12 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
+.inner-content-container {
+  margin-block-end: 3px;
+}
+
 .inner-content {
   overflow-y: scroll;
-  margin-block-end: 2px;
 }
 
 .inner-content::-webkit-scrollbar {

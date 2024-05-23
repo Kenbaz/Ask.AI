@@ -167,10 +167,10 @@ onUnmounted(() => {
               <RouterLink class="text-tinWhite font-semibold" to="/chat-completion">Text generation</RouterLink>
             </button>
           </div>  
-        <div class=" w-11/12 m-auto h-full md:w-[80%] lg:w-[650px] xl:w-[800px]">
+        <div class="inner-content-container w-11/12 m-auto mt-14 h-[82%] md:w-[80%] md:mt-20 lg:mt-16 lg:h-[77%] lg:w-[650px] xl:w-[800px] xl:h-[82%]">
           
-            <div class="h-screen">
-                <div class="m-auto inner-content mt-14 h-[85%] rounded-lg md:mt-[70px] lg:mt-[60px] lg:h-[79.2%] xl:h-[84%]" ref="responseContainer">
+            <div class=" h-full">
+                <div class="m-auto inner-content h-full rounded-lg" ref="responseContainer">
                     <div v-if="descriptionAndResponses.length === 0" class="placeholder">
                         ASK<span class="text-sm font-semibold">.AI</span>
                     </div>
@@ -190,9 +190,11 @@ onUnmounted(() => {
                         <p>Failed to generate</p>
                         <button @click="regenerateImage(prompt)">Regenerate</button>
                     </div>
-                </div>
-                <div class="input-section h-[55px] rounded-[20px] relative bg-hover_color flex border border-hover_color2 md:h-[80px] md:rounded-[30px] lg:h-[55px]">
-                    <textarea ref="inputField" class="text-tinWhite bg-hover_color rounded-[20px] p-[14px] h-full w-[85%] placeholder:font-semibold md:rounded-[30px] md:p-[24px] md:placeholder:text-xl md:w-[88%] lg:p-[14px] lg:placeholder:text-base lg:w-[91%]" v-model="prompt"
+                </div>   
+            </div> <!--inner-content-container ends-->    
+        </div>
+        <div class="input-section h-[55px] w-[96%] m-auto rounded-[30px] relative bg-hover_color flex border border-hover_color2 md:w-11/12 md:h-[80px] md:rounded-[40px] lg:w-[700px] lg:h-[55px] xl:w-[870px]">
+                    <textarea ref="inputField" class="text-tinWhite bg-hover_color rounded-[30px] p-[14px] h-full w-[85%] placeholder:font-semibold md:rounded-[40px] md:p-[24px] md:placeholder:text-xl md:w-[88%] lg:p-[14px] lg:placeholder:text-base lg:w-[91%]" v-model="prompt"
                         placeholder="Describe picture" @keydown.enter.prevent="generateImage(prompt)"
                         rows="2"></textarea>
                     <button class="enter-btn border border-hover_color2 absolute h-[44px] w-[44px] rounded-full right-[7px] top-[4.7px] text-tinWhite bg-hover_color2 font-semibold md:h-[60px] md:w-[60px] md:right-[14px] md:top-[10px] md:text-xl lg:w-[46px] lg:h-[46px] lg:right-[12px] lg:top-[4.4px] lg:text-base"
@@ -200,8 +202,6 @@ onUnmounted(() => {
                         Ask
                     </button>
                 </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -252,6 +252,10 @@ onUnmounted(() => {
   width: fit-content;
   margin-inline-end: 0;
   text-align: justify;
+}
+
+.inner-content-container {
+  margin-block-end: 3px;
 }
 
 .placeholder {
