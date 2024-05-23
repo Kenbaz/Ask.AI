@@ -269,7 +269,7 @@ onUnmounted(() => {
       </button>
       
         <div
-          class="inner-content w-11/12 m-auto border mt-[14%] min-h-[85%] md:mt-16 lg:mt-3 lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[89%]"
+          class="inner-content w-11/12 m-auto mt-[14%] min-h-[85%] md:mt-16 lg:mt-3 lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[89%]"
           ref="responseContainer"
         >
           <div
