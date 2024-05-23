@@ -257,7 +257,7 @@ onUnmounted(() => {
 
     <div
       :class="['content', { expanded: !sidebarVisible }]"
-      class="absolute left-0 w-full overflow-hidden h-full lg:top-0 lg:left-[250px] lg:content-custom"
+      class="absolute left-0 w-full h-full lg:top-0 lg:left-[250px] lg:content-custom"
     >
       <button
         type="button"
@@ -269,7 +269,7 @@ onUnmounted(() => {
       </button>
       
         <div
-          class="inner-content w-11/12 m-auto mt-[14%] min-h-[85%] md:mt-16 lg:mt-3 lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[89%]"
+          class="inner-content w-11/12 m-auto mt-[14%] min-h-[82%] md:mt-16 lg:mt-3 lg:h-[84%] lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[87%]"
           ref="responseContainer"
         >
           <div
