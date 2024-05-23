@@ -219,7 +219,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="main-container border overflow-hidden h-screen">
+  <div class="main-container border overflow-hidden h-[88.5%]">
     <font-awesome-icon
       @click="toggleSidebar"
       class="z-10 toggle-btn h-[23px] hover:bg-hover_color2 hover:rounded-lg hidden lg:block"
@@ -257,7 +257,7 @@ onUnmounted(() => {
 
     <div
       :class="['content', { expanded: !sidebarVisible }]"
-      class="absolute left-0 w-full h-full lg:top-0 lg:left-[250px] lg:content-custom"
+      class="absolute left-0 border border-yellow-500 w-full h-[88.5%] lg:top-0 lg:left-[250px] lg:content-custom"
     >
       <button
         type="button"
@@ -267,65 +267,67 @@ onUnmounted(() => {
           >Image generation</RouterLink
         >
       </button>
-      
-        <div
-          class="inner-content w-11/12 m-auto mt-[14%] min-h-[82%] md:mt-16 lg:mt-3 lg:h-[84%] lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[87%]"
-          ref="responseContainer"
-        >
-          <div
-            v-if="promptsAndResponses.length === 0"
-            class="placeholder text-3xl font-bold md:text-4xl lg:text-3xl"
-          >
-            ASK<span class="text-base font-semibold">.AI</span>
-          </div>
-          <div v-for="(item, index) in promptsAndResponses" :key="index">
-            <div
-              class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-tinWhite text-base md:text-2xl lg:text-base"
-            >
-              {{ item.prompt }}
-            </div>
-            <div
-              class="prompt-response justify-text text-tinWhite text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
-            >
-              {{ item.response.trim() }}
-            </div>
-          </div>
-          <div
-            v-if="isLoading"
-            class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl"
-          >
-            {{ loadingText }}
-          </div>
-          <div v-if="error" class="error-message">
-            <p>Failed to generate</p>
-            <button @click="regenerateResponse(prompt)">Regenerate</button>
-          </div>
-        </div><!--inner-content stop-->
+
       <div
-          class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+        class="inner-content w-11/12 border m-auto mt-[14%] min-h-[9%] md:mt-16 lg:mt-3 lg:h-[98%] lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[87%]"
+        ref="responseContainer"
+      >
+        <div
+          v-if="promptsAndResponses.length === 0"
+          class="placeholder text-3xl font-bold md:text-4xl lg:text-3xl"
         >
-          <textarea
-            ref="inputField"
-            class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
-            v-model="prompt"
-            placeholder="Ask anything.."
-            @keydown.enter.prevent="generateResponse"
-            rows="2"
-          ></textarea>
-          <button
-            class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
-            @click="generateResponse"
-          >
-            Ask
-          </button>
+          ASK<span class="text-base font-semibold">.AI</span>
         </div>
+        <div v-for="(item, index) in promptsAndResponses" :key="index">
+          <div
+            class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-tinWhite text-base md:text-2xl lg:text-base"
+          >
+            {{ item.prompt }}
+          </div>
+          <div
+            class="prompt-response justify-text text-tinWhite text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
+          >
+            {{ item.response.trim() }}
+          </div>
+        </div>
+        <div
+          v-if="isLoading"
+          class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl"
+        >
+          {{ loadingText }}
+        </div>
+        <div v-if="error" class="error-message">
+          <p>Failed to generate</p>
+          <button @click="regenerateResponse(prompt)">Regenerate</button>
+        </div>
+      </div>
+      <!--inner-content stop-->
     </div>
+  </div>
+  <div
+    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+  >
+    <textarea
+      ref="inputField"
+      class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
+      v-model="prompt"
+      placeholder="Ask anything.."
+      @keydown.enter.prevent="generateResponse"
+      rows="2"
+    ></textarea>
+    <button
+      class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
+      @click="generateResponse"
+    >
+      Ask
+    </button>
   </div>
 </template>
 
 <style scoped>
 .main-container {
   display: flex;
+   margin-block-end: 7px;
 }
 
 .toggle-btn {
@@ -339,7 +341,6 @@ onUnmounted(() => {
 
 .inner-content {
   overflow-y: scroll;
-  margin-block-end: 3px;
 }
 
 .inner-content::-webkit-scrollbar {
