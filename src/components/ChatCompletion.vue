@@ -1,10 +1,10 @@
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue';
-import openai from '../config/openaiConfig.js';
+import { ref, onMounted, onUnmounted, nextTick, computed } from "vue";
+import openai from "../config/openaiConfig.js";
 
 const promptsAndResponses = ref([]);
 const promptHistory = ref([]);
-const prompt = ref('');
+const prompt = ref("");
 const sidebarVisible = ref(true);
 const inputField = ref(null);
 const isLoading = ref(false);
@@ -15,12 +15,11 @@ const responseContainer = ref(null);
 let isRegenerating = false;
 let loadingInterval = null;
 
-const STORAGE_KEY = 'promptsAndResponses';
-const STORAGE_TIMESTAMP_KEY = 'promptsAndResponsesTimestamp';
-const HISTORY_KEY = 'promptsHistory';
-const HISTORY_TIMESTAMP_KEY = 'promptHistoryTimestamp';
+const STORAGE_KEY = "promptsAndResponses";
+const STORAGE_TIMESTAMP_KEY = "promptsAndResponsesTimestamp";
+const HISTORY_KEY = "promptsHistory";
+const HISTORY_TIMESTAMP_KEY = "promptHistoryTimestamp";
 const EXPIRATION_TIME = 3600000; // 1 hour in milliseconds
-
 
 function savePromptsToLocalStorage() {
   const timestamp = Date.now();
@@ -47,7 +46,7 @@ function loadHistoryFromLocalStorage() {
     } else {
       localStorage.removeItem(HISTORY_KEY);
       localStorage.removeItem(HISTORY_TIMESTAMP_KEY);
-    }    
+    }
   }
 }
 
@@ -102,17 +101,17 @@ async function generateResponse() {
   if (!prompt.value) return;
   isLoading.value = true;
   error.value = false;
-  startLoadingAnimation()
+  startLoadingAnimation();
 
   promptsAndResponses.value.push({
     prompt: prompt.value,
-    response: '',
+    response: "",
   });
 
   if (!isRegenerating) {
     promptHistory.value.push({
       prompt: prompt.value,
-      response: '',
+      response: "",
     });
   }
 
@@ -123,8 +122,8 @@ async function generateResponse() {
 
   try {
     const res = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt.value }],
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt.value }],
       max_tokens: 100,
     });
     const newResponse = res.choices[0].message.content;
@@ -132,19 +131,21 @@ async function generateResponse() {
     promptsAndResponses.value[currentIndex].response = newResponse;
 
     if (!isRegenerating) {
-      promptHistory.value[promptHistory.value.length - 1].response = newResponse;
+      promptHistory.value[promptHistory.value.length - 1].response =
+        newResponse;
     }
-    
-    prompt.value = '';
+
+    prompt.value = "";
     savePromptsToLocalStorage();
-    saveHistoryToLocalStorage()
+    saveHistoryToLocalStorage();
   } catch (err) {
     error.value = true;
-    promptsAndResponses.value[currentIndex].response = 'Failed to generate response.';
+    promptsAndResponses.value[currentIndex].response =
+      "Failed to generate response.";
   } finally {
     isLoading.value = false;
     isRegenerating = false;
-    startLoadingAnimation()
+    startLoadingAnimation();
     await nextTick();
     scrollToBottom();
     if (inputField.value) {
@@ -157,7 +158,7 @@ function scrollToBottom() {
   if (responseContainer.value) {
     responseContainer.value.scroll({
       top: responseContainer.value.scrollHeight,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   }
 }
@@ -170,7 +171,7 @@ function clearPrompts() {
   promptsAndResponses.value = [];
   localStorage.removeItem(STORAGE_KEY);
   localStorage.removeItem(STORAGE_TIMESTAMP_KEY);
-  prompt.value = '';
+  prompt.value = "";
   if (inputField.value) {
     inputField.value.focus();
   }
@@ -183,15 +184,15 @@ async function regenerateResponse(selectedPrompt) {
 }
 
 function startLoadingAnimation() {
-  stopLoadingAnimation()
+  stopLoadingAnimation();
   loadingDots.value = 0;
   loadingInterval = setInterval(() => {
     loadingDots.value = (loadingDots.value + 1) % 4;
-  }, 500)
+  }, 500);
 }
 
 function stopLoadingAnimation() {
-   if (loadingInterval) {
+  if (loadingInterval) {
     clearInterval(loadingInterval);
     loadingInterval = null;
   }
@@ -200,7 +201,7 @@ function stopLoadingAnimation() {
 
 const loadingText = computed(() => {
   return "Generating" + ".".repeat(loadingDots.value);
-})
+});
 
 onMounted(() => {
   loadPromptsFromLocalStorage();
@@ -213,69 +214,115 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  stopLoadingAnimation()
-})
+  stopLoadingAnimation();
+});
 </script>
-
-
 
 <template>
   <div class="main-container h-screen">
-    <font-awesome-icon @click="toggleSidebar" class="z-10 toggle-btn h-[23px] hover:bg-hover_color2 hover:rounded-lg hidden lg:block"
-      :icon="['fas', sidebarVisible ? 'columns' : 'columns']" />
-    <div :class="['sidebar', { close: !sidebarVisible }]" class="hidden lg:block">
+    <font-awesome-icon
+      @click="toggleSidebar"
+      class="z-10 toggle-btn h-[23px] hover:bg-hover_color2 hover:rounded-lg hidden lg:block"
+      :icon="['fas', sidebarVisible ? 'columns' : 'columns']"
+    />
+    <div
+      :class="['sidebar', { close: !sidebarVisible }]"
+      class="hidden lg:block lg:bg-hover_color"
+    >
       <h2 class="mt-14 font-semibold text-tinWhite">History</h2>
-      <ul class=" h-auto">
-        <li v-for="(item, index) in promptHistory" :key="index" @click="regenerateResponse(item.prompt)"
-          class="sidebar-prompt cursor-pointer text-tinWhite grid justify-start h-auto p-2 hover:bg-hover_color2 rounded-lg">
+      <ul class="h-auto">
+        <li
+          v-for="(item, index) in promptHistory"
+          :key="index"
+          @click="regenerateResponse(item.prompt)"
+          class="sidebar-prompt cursor-pointer text-tinWhite grid justify-start h-auto p-2 hover:bg-hover_color2 rounded-lg"
+        >
           {{ item.prompt }}
         </li>
       </ul>
       <button
-              type="button"
-              class="shimmer-button text-center mt-6 bg-hover_color2 w-40 p-1 rounded-lg"
-            >
-              <RouterLink class="text-tinWhite font-semibold" to="/image-generation">Image generation</RouterLink>
-            </button>
+        type="button"
+        class="shimmer-button text-center mt-6 bg-hover_color2 w-40 p-1 lg:absolute lg:left-8"
+      >
+        <RouterLink class="text-tinWhite font-semibold" to="/image-generation"
+          >Image generation</RouterLink
+        >
+      </button>
     </div>
-    <font-awesome-icon @click="clearPrompts" :icon="['fas', 'edit']"
-      class="clear-icon z-10 top-[5px] left-[20px] h-[30px] cursor-pointer  hover:bg-hover_color2 rounded-lg md:h-10 lg:h-[23px] lg:left-[70px] lg:top-[9px]" />
+    <font-awesome-icon
+      @click="clearPrompts"
+      :icon="['fas', 'edit']"
+      class="clear-icon z-10 top-[5px] left-[20px] h-[30px] cursor-pointer hover:bg-hover_color2 rounded-lg md:h-10 lg:h-[23px] lg:left-[70px] lg:top-[9px]"
+    />
 
-    <div :class="['content', { expanded: !sidebarVisible }]" class="absolute left-0 w-full overflow-hidden h-full lg:top-0 lg:left-[250px] lg:content-custom">
+    <div
+      :class="['content', { expanded: !sidebarVisible }]"
+      class="absolute left-0 w-full overflow-hidden h-full lg:top-0 lg:left-[250px] lg:content-custom"
+    >
       <button
-              type="button"
-              class="shimmer-button text-center mt-6 bg-hover_color2 w-40 p-1 rounded-lg -top-2 -left-7 md:-top-[13px] md:text-2xl md:w-56 md:-left-40 md:p-2 lg:hidden"
-            >
-              <RouterLink class="text-tinWhite font-semibold" to="/image-generation">Image generation</RouterLink>
-            </button>
-      <div class="h-[93.7%] w-11/12 m-auto lg:w-[600px] xl:w-[800px]">
-        <div class=" inner-content h-[87%] rounded-xl " ref="responseContainer">
-          <div v-if="promptsAndResponses.length === 0" class="placeholder text-3xl font-bold md:text-4xl lg:text-3xl">
+        type="button"
+        class="shimmer-button fixed text-center mt-6 bg-hover_color2 w-40 p-1 rounded-lg -top-2 left-[100px] md:-top-[13px] md:text-2xl md:w-56 md:left-40 md:p-2 lg:hidden"
+      >
+        <RouterLink class="text-tinWhite font-semibold" to="/image-generation"
+          >Image generation</RouterLink
+        >
+      </button>
+      <div
+        class="h-[98%] overflow-hidden mt-1 w-11/12 m-auto lg:w-[600px] xl:w-[800px]"
+      >
+        <div
+          class="inner-content mt-12 h-[84%] md:mt-16 lg:mt-0 lg:h-[89%] lg:rounded-xl xl:h-[91%]"
+          ref="responseContainer"
+        >
+          <div
+            v-if="promptsAndResponses.length === 0"
+            class="placeholder text-3xl font-bold md:text-4xl lg:text-3xl"
+          >
             ASK<span class="text-base font-semibold">.AI</span>
           </div>
           <div v-for="(item, index) in promptsAndResponses" :key="index">
-            <div class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-tinWhite text-base md:text-2xl lg:text-base">
+            <div
+              class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-tinWhite text-base md:text-2xl lg:text-base"
+            >
               {{ item.prompt }}
             </div>
-            <div class="prompt-response justify-text text-tinWhite text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8 ">
+            <div
+              class="prompt-response justify-text text-tinWhite text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
+            >
               {{ item.response.trim() }}
             </div>
           </div>
-          <div v-if="isLoading" class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl">{{
-            loadingText }}</div>
+          <div
+            v-if="isLoading"
+            class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl"
+          >
+            {{ loadingText }}
+          </div>
           <div v-if="error" class="error-message">
             <p>Failed to generate</p>
             <button @click="regenerateResponse(prompt)">Regenerate</button>
           </div>
         </div>
-        <div class="input-section h-[60px] relative bg-hover_color flex md:h-[70px] lg:h-[60px]">
-          <textarea ref="inputField" class="text-tinWhite rounded-2xl w-[85%] p-[15px] text-[18px] placeholder:font-bold md:p-[18px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base" v-model="prompt" placeholder="Ask anything.."
-            @keydown.enter.prevent="generateResponse" rows="2"></textarea>
-          <button class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[4.6px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base" @click="generateResponse">Ask</button>
+        <div
+          class="input-section h-[60px] rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:h-[60px] lg:rounded-[40px]"
+        >
+          <textarea
+            ref="inputField"
+            class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
+            v-model="prompt"
+            placeholder="Ask anything.."
+            @keydown.enter.prevent="generateResponse"
+            rows="2"
+          ></textarea>
+          <button
+            class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
+            @click="generateResponse"
+          >
+            Ask
+          </button>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -295,7 +342,7 @@ onUnmounted(() => {
 
 .inner-content {
   overflow-y: scroll;
-  margin-block-end: 15px;
+  margin-block-end: 2px;
 }
 
 .inner-content::-webkit-scrollbar {
@@ -315,12 +362,10 @@ onUnmounted(() => {
   height: 100%;
   width: 250px;
   padding: 10px 14px;
-  background-color: #242526;
   border-right: 1px solid #18191a;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
   transition: transform 0.3s ease;
 }
-
 
 .sidebar.close {
   transform: translateX(-100%);
@@ -333,7 +378,7 @@ onUnmounted(() => {
   margin: 10px auto;
   width: fit-content;
   margin-inline-end: 0;
-  text-align: justify
+  text-align: justify;
 }
 
 .placeholder {
@@ -342,7 +387,6 @@ onUnmounted(() => {
   left: 50%;
   transform: translate(-50%, -50%);
   color: #ccc;
-  
 }
 
 .justify-text {
@@ -358,7 +402,7 @@ onUnmounted(() => {
   /* border: 1px solid #ddd; */
   max-width: 100%;
   margin: 0 auto;
-  border-radius: 40px;
+  /* border-radius: 40px; */
 }
 
 textarea {
@@ -366,7 +410,7 @@ textarea {
   outline: none;
   /* border: 1px solid; */
   resize: none;
-  border-radius: 40px;
+  /* border-radius: 40px; */
 }
 
 div {
@@ -379,7 +423,8 @@ p {
   white-space: pre-wrap;
 }
 
-.loading-message, .error-message {
+.loading-message,
+.error-message {
   text-align: start;
   margin-top: 20px;
   width: fit-content;
@@ -406,13 +451,8 @@ p {
   }
 }
 
-.shimmer-button {
-  position: relative;
-  overflow: hidden;
-}
-
 .shimmer-button::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -430,9 +470,8 @@ p {
   pointer-events: none;
 }
 
-.shimmer-button .text-tinWhite {
+/* .shimmer-button .text-tinWhite {
   position: relative;
   z-index: 2;
-}
-
+} */
 </style>

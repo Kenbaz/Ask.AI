@@ -156,11 +156,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="main-container overflow-hidden h-full">
+    <div class="main-container overflow-hidden h-screen">
         <font-awesome-icon @click="clearPrompts" :icon="['fas', 'edit']"
             class="clear-icon z-10 top-[9px] left-0 h-[28px] cursor-pointer hover:bg-hover_color2 rounded-lg md:h-[40px] lg:h-[30px]" />
-        <div class=" w-11/12 m-auto h-[92.6%] mt-16 md:w-[80%] md:mt-20 lg:mt-16 lg:w-[70%] lg:h-[89%] xl:w-[800px]">
-          <div class="fixed left-20 -top-2 md:left-24">
+            <div class="fixed left-20 -top-2 md:left-24">
             <button
               type="button"
               class="shimmer-button text-center mt-[25px] bg-hover_color2 w-40 p-1 rounded-lg text-base md:text-2xl md:p-2 md:w-48 lg:text-base lg:w-40 "
@@ -168,8 +167,10 @@ onUnmounted(() => {
               <RouterLink class="text-tinWhite font-semibold" to="/chat-completion">Text generation</RouterLink>
             </button>
           </div>  
-            <div class="h-full">
-                <div class="m-auto inner-content h-[87%] rounded-lg lg:-mt-[1px]" ref="responseContainer">
+        <div class=" w-11/12 m-auto h-full md:w-[80%] lg:w-[650px] xl:w-[800px]">
+          
+            <div class="h-screen">
+                <div class="m-auto inner-content mt-14 h-[85%] rounded-lg md:mt-[70px] lg:mt-[60px] lg:h-[79.2%] xl:h-[84%]" ref="responseContainer">
                     <div v-if="descriptionAndResponses.length === 0" class="placeholder">
                         ASK<span class="text-sm font-semibold">.AI</span>
                     </div>
@@ -190,11 +191,11 @@ onUnmounted(() => {
                         <button @click="regenerateImage(prompt)">Regenerate</button>
                     </div>
                 </div>
-                <div class="input-section h-[55px] relative bg-hover_color flex rounded-[20px] md:h-[80px] md:rounded-[30px] lg:h-[55px]">
+                <div class="input-section h-[55px] rounded-[20px] relative bg-hover_color flex border border-hover_color2 md:h-[80px] md:rounded-[30px] lg:h-[55px]">
                     <textarea ref="inputField" class="text-tinWhite bg-hover_color rounded-[20px] p-[14px] h-full w-[85%] placeholder:font-semibold md:rounded-[30px] md:p-[24px] md:placeholder:text-xl md:w-[88%] lg:p-[14px] lg:placeholder:text-base lg:w-[91%]" v-model="prompt"
                         placeholder="Describe picture" @keydown.enter.prevent="generateImage(prompt)"
                         rows="2"></textarea>
-                    <button class="enter-btn absolute h-[44px] w-[44px] rounded-full right-[7px] top-[4.7px] text-tinWhite bg-hover_color2 font-semibold md:h-[60px] md:w-[60px] md:right-[14px] md:top-[10px] md:text-xl lg:w-[46px] lg:h-[46px] lg:right-[12px] lg:top-[4.4px] lg:text-base"
+                    <button class="enter-btn border border-hover_color2 absolute h-[44px] w-[44px] rounded-full right-[7px] top-[4.7px] text-tinWhite bg-hover_color2 font-semibold md:h-[60px] md:w-[60px] md:right-[14px] md:top-[10px] md:text-xl lg:w-[46px] lg:h-[46px] lg:right-[12px] lg:top-[4.4px] lg:text-base"
                         @click="generateImage(prompt)">
                         Ask
                     </button>
@@ -219,7 +220,7 @@ onUnmounted(() => {
   /* width: 776px; */
   /* border: 1px solid; */
   overflow-y: scroll;
-  margin-block-end: 10px;
+  margin-block-end: 2px;
 }
 
 .inner-content::-webkit-scrollbar {
@@ -295,10 +296,10 @@ div {
   margin-bottom: 20px;
 }
 
-p {
+/* p {
   font-size: 18px;
   white-space: pre-wrap;
-}
+} */
 
 .loading-message,
 .error-message {
