@@ -267,11 +267,9 @@ onUnmounted(() => {
           >Image generation</RouterLink
         >
       </button>
-      <div
-        class="inner-content-container h-[89%] overflow-hidden mt-1 w-11/12 m-auto lg:h-[87%] lg:w-[600px] xl:w-[800px] xl:h-[89%]"
-      >
+      
         <div
-          class="inner-content overflow-hidden mt-[14%] h-[94.2%] md:mt-16 lg:mt-0 lg:h-full lg:rounded-xl xl:h-full"
+          class="inner-content w-11/12 m-auto border mt-[14%] min-h-[85%] md:mt-16 lg:mt-3 lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[89%]"
           ref="responseContainer"
         >
           <div
@@ -302,9 +300,7 @@ onUnmounted(() => {
             <p>Failed to generate</p>
             <button @click="regenerateResponse(prompt)">Regenerate</button>
           </div>
-        </div>
-    
-      </div> <!--inner-content container stop-->
+        </div><!--inner-content stop-->
       <div
           class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
         >
@@ -341,12 +337,9 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
-.inner-content-container {
-  margin-block-end: 3px;
-}
-
 .inner-content {
   overflow-y: scroll;
+  margin-block-end: 3px;
 }
 
 .inner-content::-webkit-scrollbar {
