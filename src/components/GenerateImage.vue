@@ -156,8 +156,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="main-container w-full flex flex-col max-md:w-full overflow-hidden h-screen ">
-    <header class="flex border border-t-0 border-r-0 border-l-0 border-b-hover_color2 gap-4 items-center md:gap-8 lg:h-[50px]">
+  <div class="main-container w-full flex flex-col py-5 h-screen ">
+    <header class="flex border border-t-0 pb-5 border-r-0 border-l-0 border-b-hover_color2 gap-4 items-center md:gap-8 lg:h-[50px]">
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
@@ -173,9 +173,9 @@ onUnmounted(() => {
       </button>
   </header>
   
-  <main class="flex flex-col py-2 w-full min-h-[95%] justify-between gap-4">
+  <main class="flex flex-col w-full h-full justify-between gap-4">
     <div
-        class="inner-content overflow-y-scroll h-full w-11/12 m-auto md:h-[83%] lg:w-[600px] lg:h-[80%] xl:w-[800px] xl:h-[83%] "
+        class="inner-content overflow-y-scroll h-full w-11/12 m-auto lg:w-[600px] lg:h-[80%] xl:w-[800px] xl:h-[83%] "
         ref="responseContainer"
       >
         <div
