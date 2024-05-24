@@ -221,7 +221,7 @@ onUnmounted(() => {
 <template>
   <!--Small and Medium screens UI-->
   <div class="main-container w-full max-md:w-full overflow-hidden h-screen lg:hidden ">
-    <header class="lg:hidden flex gap-4 items-center md:gap-8">
+    <header class="lg:hidden h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 flex gap-4 items-center md:gap-8">
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
@@ -238,7 +238,7 @@ onUnmounted(() => {
   </header>
   
  <div
-        class="inner-content overflow-y-scroll w-11/12 m-auto h-[81%] md:h-[83%] lg:hidden "
+        class="inner-content mt-5 mb-7 overflow-y-scroll w-11/12 m-auto h-[72%] md:h-[83%] lg:hidden "
         ref="responseContainer"
       >
         <div
