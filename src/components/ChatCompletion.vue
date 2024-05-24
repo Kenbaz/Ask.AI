@@ -160,7 +160,7 @@ function scrollToBottom() {
       top: responseContainer.value.scrollHeight,
       behavior: "smooth",
     });
-  }
+  } 
 }
 
 function toggleSidebar() {
@@ -219,7 +219,81 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="main-container border overflow-hidden h-[88.5%]">
+  <!--Small and Medium screens UI-->
+  <div class="main-container w-full max-md:w-full overflow-hidden h-screen lg:hidden ">
+    <header class="lg:hidden flex gap-4 items-center md:gap-8">
+    <font-awesome-icon
+      @click="clearPrompts"
+      :icon="['fas', 'edit']"
+      class="clear-icon ml-4 z-10 top-[4px] h-[24px] cursor-pointer hover:bg-hover_color2 rounded-lg md:-top-[0px] md:h-10 lg:h-[23px] lg:left-[70px] lg:top-[9px]"
+    />
+    <button
+        type="button"
+        class="shimmer-button relative text-center mt-6 bg-hover_color2 w-40 p-1 rounded-lg -top-2 md:-top-[11px] md:text-2xl md:w-56 md:p-2 lg:hidden"
+      >
+        <RouterLink class="text-tinWhite font-semibold" to="/image-generation"
+          >Image generation</RouterLink
+        >
+      </button>
+  </header>
+  
+ <div
+        class="inner-content overflow-y-scroll w-11/12 m-auto h-[81%] md:h-[83%] lg:hidden "
+        ref="responseContainer"
+      >
+        <div
+          v-if="promptsAndResponses.length === 0"
+          class="placeholder text-3xl font-bold md:text-4xl lg:text-3xl"
+        >
+          ASK<span class="text-base font-semibold">.AI</span>
+        </div>
+        <div v-for="(item, index) in promptsAndResponses" :key="index">
+          <div
+            class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-tinWhite text-base md:text-2xl lg:text-base"
+          >
+            {{ item.prompt }}
+          </div>
+          <div
+            class="prompt-response justify-text text-tinWhite text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
+          >
+            {{ item.response.trim() }}
+          </div>
+        </div>
+        <div
+          v-if="isLoading"
+          class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl"
+        >
+          {{ loadingText }}
+        </div>
+        <div v-if="error" class="error-message">
+          <p>Failed to generate</p>
+          <button @click="regenerateResponse(prompt)">Regenerate</button>
+        </div>
+      </div>
+      <div
+    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+  >
+    <textarea
+      ref="inputField"
+      class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
+      v-model="prompt"
+      placeholder="Ask anything.."
+      @keydown.enter.prevent="generateResponse"
+      rows="2"
+    ></textarea>
+    <button
+      class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
+      @click="generateResponse"
+    >
+      Ask
+    </button>
+  </div>
+
+  </div>
+
+  <!--Large screens UI-->
+
+<main class="content-container hidden h-screen lg:block ">
     <font-awesome-icon
       @click="toggleSidebar"
       class="z-10 toggle-btn h-[23px] hover:bg-hover_color2 hover:rounded-lg hidden lg:block"
@@ -252,24 +326,16 @@ onUnmounted(() => {
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
-      class="clear-icon z-10 top-[5px] left-[20px] h-[30px] cursor-pointer hover:bg-hover_color2 rounded-lg md:h-10 lg:h-[23px] lg:left-[70px] lg:top-[9px]"
+      class="clear-icon hidden fixed z-10 top-[5px] left-[20px] h-[30px] cursor-pointer hover:bg-hover_color2 rounded-lg md:h-10 lg:h-[23px] lg:left-[70px] lg:block lg:top-[9px]"
     />
 
     <div
       :class="['content', { expanded: !sidebarVisible }]"
-      class="absolute left-0 border border-yellow-500 w-full h-[88.5%] lg:top-0 lg:left-[250px] lg:content-custom"
+      class="absolute hidden lg:block left-0 w-full h-[88%] lg:top-0 lg:left-[250px] lg:content-custom xl:h-[98%]"
     >
-      <button
-        type="button"
-        class="shimmer-button fixed text-center mt-6 bg-hover_color2 w-40 p-1 rounded-lg -top-2 left-[100px] md:-top-[13px] md:text-2xl md:w-56 md:left-40 md:p-2 lg:hidden"
-      >
-        <RouterLink class="text-tinWhite font-semibold" to="/image-generation"
-          >Image generation</RouterLink
-        >
-      </button>
 
       <div
-        class="inner-content w-11/12 border m-auto mt-[14%] min-h-[9%] md:mt-16 lg:mt-3 lg:h-[98%] lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[87%]"
+        class="inner-content w-11/12 overflow-y-scroll m-auto min-h-[91%] lg:h-[100%] lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[87%]"
         ref="responseContainer"
       >
         <div
@@ -301,10 +367,7 @@ onUnmounted(() => {
           <button @click="regenerateResponse(prompt)">Regenerate</button>
         </div>
       </div>
-      <!--inner-content stop-->
-    </div>
-  </div>
-  <div
+      <div
     class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
   >
     <textarea
@@ -322,13 +385,17 @@ onUnmounted(() => {
       Ask
     </button>
   </div>
+    </div>
+  </main>
+
 </template>
 
 <style scoped>
-.main-container {
+/* .main-container {
   display: flex;
+  flex-direction: column;
    margin-block-end: 7px;
-}
+} */
 
 .toggle-btn {
   position: fixed;
@@ -339,16 +406,12 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
-.inner-content {
-  overflow-y: scroll;
-}
-
 .inner-content::-webkit-scrollbar {
   display: none;
 }
 
 .clear-icon {
-  position: fixed;
+  /* position: relative; */
   font-size: 16px;
   padding: 10px 20px;
 }
@@ -411,10 +474,11 @@ textarea {
   /* border-radius: 40px; */
 }
 
-div {
+/* div {
   text-align: center;
   margin-bottom: 20px;
-}
+  border: 1px solid;
+} */
 
 p {
   font-size: 18px;

@@ -156,53 +156,73 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="main-container overflow-hidden h-screen">
-        <font-awesome-icon @click="clearPrompts" :icon="['fas', 'edit']"
-            class="clear-icon z-10 top-[9px] left-0 h-[28px] cursor-pointer hover:bg-hover_color2 rounded-lg md:h-[40px] lg:h-[30px]" />
-            <div class="fixed left-20 -top-2 md:left-24">
-            <button
-              type="button"
-              class="shimmer-button text-center mt-[25px] bg-hover_color2 w-40 p-1 rounded-lg text-base md:text-2xl md:p-2 md:w-48 lg:text-base lg:w-40 "
-            >
-              <RouterLink class="text-tinWhite font-semibold" to="/chat-completion">Text generation</RouterLink>
-            </button>
-          </div>  
-        <div class="inner-content-container w-11/12 m-auto mt-14 h-[82%] md:w-[80%] md:mt-20 lg:mt-16 lg:h-[77%] lg:w-[650px] xl:w-[800px] xl:h-[82%]">
-          
-            <div class=" h-full">
-                <div class="m-auto inner-content h-full rounded-lg" ref="responseContainer">
-                    <div v-if="descriptionAndResponses.length === 0" class="placeholder">
-                        ASK<span class="text-sm font-semibold">.AI</span>
-                    </div>
-                    <div v-for="(item, index) in descriptionAndResponses" :key="index">
-                        <div class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-tinWhite text-base md:text-xl">
-                            {{ item.prompt }}
-                        </div>
-                        <div class="prompt-response w-full text-tinWhite text-base">
-                            <img :src="item.response" class="w-60" />
-                        </div>
-                    </div>
-                    <div v-if="isLoading"
-                        class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl">
-                        {{ loadingText }}
-                    </div>
-                    <div v-if="error" class="error-message">
-                        <p>Failed to generate</p>
-                        <button @click="regenerateImage(prompt)">Regenerate</button>
-                    </div>
-                </div>   
-            </div> <!--inner-content-container ends-->    
+  <div class="main-container w-full max-md:w-full overflow-hidden h-screen ">
+    <header class="flex gap-4 items-center md:gap-8 lg:h-[50px]">
+    <font-awesome-icon
+      @click="clearPrompts"
+      :icon="['fas', 'edit']"
+      class="clear-icon z-10 top-[4px] h-[24px] cursor-pointer hover:bg-hover_color2 rounded-lg md:-top-[0px] md:h-10 lg:h-[23px] lg:left-[70px] lg:top-[9px]"
+    />
+    <button
+        type="button"
+        class="shimmer-button relative text-center mt-6 bg-hover_color2 w-40 p-1 rounded-lg -top-3 md:-top-[11px] md:text-2xl md:w-56 md:p-2 lg:p-1 lg:text-base lg:w-40"
+      >
+        <RouterLink class="text-tinWhite font-semibold" to="/chat-completion"
+          >Text generation</RouterLink
+        >
+      </button>
+  </header>
+  
+ <div
+        class="inner-content overflow-y-scroll w-11/12 m-auto h-[81%] md:h-[83%] lg:w-[600px] lg:h-[80%] xl:w-[800px] xl:h-[83%] "
+        ref="responseContainer"
+      >
+        <div
+          v-if="descriptionAndResponses.length === 0"
+          class="placeholder text-3xl font-bold md:text-4xl lg:text-3xl"
+        >
+          ASK<span class="text-base font-semibold">.AI</span>
         </div>
-        <div class="input-section h-[55px] w-[96%] m-auto rounded-[30px] relative bg-hover_color flex border border-hover_color2 md:w-11/12 md:h-[80px] md:rounded-[40px] lg:w-[700px] lg:h-[55px] xl:w-[870px]">
-                    <textarea ref="inputField" class="text-tinWhite bg-hover_color rounded-[30px] p-[14px] h-full w-[85%] placeholder:font-semibold md:rounded-[40px] md:p-[24px] md:placeholder:text-xl md:w-[88%] lg:p-[14px] lg:placeholder:text-base lg:w-[91%]" v-model="prompt"
-                        placeholder="Describe picture" @keydown.enter.prevent="generateImage(prompt)"
-                        rows="2"></textarea>
-                    <button class="enter-btn border border-hover_color2 absolute h-[44px] w-[44px] rounded-full right-[7px] top-[4.7px] text-tinWhite bg-hover_color2 font-semibold md:h-[60px] md:w-[60px] md:right-[14px] md:top-[10px] md:text-xl lg:w-[46px] lg:h-[46px] lg:right-[12px] lg:top-[4.4px] lg:text-base"
-                        @click="generateImage(prompt)">
-                        Ask
-                    </button>
-                </div>
-    </div>
+        <div v-for="(item, index) in descriptionAndResponses" :key="index">
+          <div
+            class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-tinWhite text-base md:text-2xl lg:text-base"
+          >
+            {{ item.prompt }}
+          </div>
+          <div class="prompt-response w-full text-tinWhite text-base">
+              <img :src="item.response" class="w-60" />
+          </div>
+        </div>
+        <div
+          v-if="isLoading"
+          class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl"
+        >
+          {{ loadingText }}
+        </div>
+        <div v-if="error" class="error-message">
+          <p>Failed to generate</p>
+          <button @click="regenerateImage(prompt)">Regenerate</button>
+        </div>
+      </div>
+      <div
+    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+  >
+    <textarea
+      ref="inputField"
+      class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
+      v-model="prompt"
+      placeholder="Ask anything.."
+      @keydown.enter.prevent="generateImage(prompt)"
+      rows="2"
+    ></textarea>
+    <button
+      class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
+      @click="generateImage(prompt)"
+    >
+      Ask
+    </button>
+  </div>
+  </div>
 </template>
 
 <style scoped>
@@ -217,9 +237,6 @@ onUnmounted(() => {
 }
 
 .inner-content {
-  /* width: 776px; */
-  /* border: 1px solid; */
-  overflow-y: scroll;
   margin-block-end: 2px;
 }
 
@@ -228,7 +245,6 @@ onUnmounted(() => {
 }
 
 .clear-icon {
-  position: fixed;
   font-size: 16px;
   padding: 10px 20px;
 }
@@ -334,7 +350,6 @@ div {
 }
 
 .shimmer-button {
-  position: relative;
   overflow: hidden;
 }
 
