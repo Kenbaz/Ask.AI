@@ -156,6 +156,9 @@ async function generateResponse() {
 
 function scrollToBottom() {
   if (responseContainer.value) {
+    console.log("scrollToBottom called");
+    console.log("scrollHeight:", responseContainer.value.scrollHeight);
+    console.log("clientHeight:", responseContainer.value.clientHeight);
     responseContainer.value.scroll({
       top: responseContainer.value.scrollHeight,
       behavior: "smooth",
@@ -220,7 +223,7 @@ onUnmounted(() => {
 
 <template>
   <!--Small and Medium screens UI-->
-  <div class="main-container w-full max-md:w-full h-screen max-h-full lg:hidden ">
+  <div class="main-container w-full flex flex-col overflow-hidden h-screen lg:hidden ">
     <header class="lg:hidden h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 flex gap-4 items-center md:gap-8">
     <font-awesome-icon
       @click="clearPrompts"
@@ -236,9 +239,10 @@ onUnmounted(() => {
         >
       </button>
   </header>
-  
- <div
-        class="inner-content mt-5 mb-7 overflow-y-scroll w-11/12 m-auto h-[72%] md:h-[83%] lg:hidden "
+
+  <div class="flex flex-col py-2 w-full h-full justify-between gap-4">
+    <div
+        class="inner-content flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
         ref="responseContainer"
       >
         <div
@@ -249,12 +253,12 @@ onUnmounted(() => {
         </div>
         <div v-for="(item, index) in promptsAndResponses" :key="index">
           <div
-            class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-tinWhite text-base md:text-2xl lg:text-base"
+            class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-white text-base md:text-2xl lg:text-base"
           >
             {{ item.prompt }}
           </div>
           <div
-            class="prompt-response justify-text text-tinWhite text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
+            class="prompt-response justify-tex text-white text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
           >
             {{ item.response.trim() }}
           </div>
@@ -288,8 +292,8 @@ onUnmounted(() => {
       Ask
     </button>
   </div>
-
   </div>
+</div>
 
   <!--Large screens UI-->
 
@@ -301,7 +305,7 @@ onUnmounted(() => {
     />
     <div
       :class="['sidebar', { close: !sidebarVisible }]"
-      class="hidden lg:block lg:bg-hover_color"
+      class="hidden overflow-auto lg:block lg:bg-hover_color"
     >
       <h2 class="mt-14 font-semibold text-tinWhite">History</h2>
       <ul class="h-auto">
@@ -331,11 +335,11 @@ onUnmounted(() => {
 
     <div
       :class="['content', { expanded: !sidebarVisible }]"
-      class="absolute hidden lg:block left-0 w-full h-[88%] lg:top-0 lg:left-[250px] lg:content-custom xl:h-[98%]"
+      class="absolute hidden lg:block left-0 w-full h-[88%] lg:top-0 lg:left-[250px] lg:py-10 lg:content-custom xl:h-[98%]"
     >
 
       <div
-        class="inner-content w-11/12 overflow-y-scroll m-auto min-h-[91%] lg:h-[100%] lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[87%]"
+        class="inner-content w-11/12 overflow-y-scroll m-auto min-h-[91%] lg:h-[105%] mb-2 lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[97%]"
         ref="responseContainer"
       >
         <div
@@ -391,11 +395,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* .main-container {
-  display: flex;
-  flex-direction: column;
-   margin-block-end: 7px;
-} */
 
 .toggle-btn {
   position: fixed;
@@ -411,7 +410,6 @@ onUnmounted(() => {
 }
 
 .clear-icon {
-  /* position: relative; */
   font-size: 16px;
   padding: 10px 20px;
 }
@@ -444,7 +442,7 @@ onUnmounted(() => {
 
 .placeholder {
   position: absolute;
-  top: 43%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: #ccc;
@@ -460,25 +458,15 @@ onUnmounted(() => {
 }
 
 .input-section {
-  /* border: 1px solid #ddd; */
   max-width: 100%;
   margin: 0 auto;
-  /* border-radius: 40px; */
 }
 
 textarea {
   height: 100%;
   outline: none;
-  /* border: 1px solid; */
   resize: none;
-  /* border-radius: 40px; */
 }
-
-/* div {
-  text-align: center;
-  margin-bottom: 20px;
-  border: 1px solid;
-} */
 
 p {
   font-size: 18px;
