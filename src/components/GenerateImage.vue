@@ -156,7 +156,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="main-container w-full flex flex-col pt-4 pb-16 h-screen">
+  <div class="main-container w-full flex flex-col pt-4 pb-14 h-screen">
     <header class=" h-16 border flex-shrink-0 border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8 lg:h-[50px]">
     <font-awesome-icon
       @click="clearPrompts"

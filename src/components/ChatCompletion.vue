@@ -220,7 +220,7 @@ onUnmounted(() => {
 
 <template>
   <!--Small and Medium screens UI-->
-  <div class="main-container h-full w-full flex flex-col pt-4 pb-20 lg:hidden ">
+  <div class="main-container h-full w-full flex flex-col pt-4 pb-10 lg:hidden ">
     <header class="lg:hidden flex-shrink-0 h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8">
     <font-awesome-icon
       @click="clearPrompts"
@@ -237,9 +237,9 @@ onUnmounted(() => {
       </button>
   </header>
 
-  <div class="flex flex-col flex-shrink-0 w-full min-h-[100%] justify-between gap-4">
+  <div class="flex flex-col flex-shrink-0 w-full min-h-[90%] justify-between gap-4">
     <div
-        class="inner-content flex flex-grow flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
+        class="inner-content border flex flex-grow flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
         ref="responseContainer"
       >
         <div
