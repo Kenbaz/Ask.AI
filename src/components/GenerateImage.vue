@@ -173,9 +173,9 @@ onUnmounted(() => {
       </button>
   </header>
   
-  <div class="flex flex-col flex-shrink-0 pb-[53px] border border-blue-800 overflow-hidden w-full h-full justify-between items-center gap-4 lg:pb-[40px]">
+  <div class="flex flex-col flex-shrink-0 pb-[53px] overflow-hidden w-full h-full justify-between items-center gap-4 lg:pb-[40px]">
     <div
-        class="inner-content relative border flex-grow flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:w-[600px] xl:w-[800px] "
+        class="inner-content relative flex-grow flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:w-[600px] xl:w-[800px] "
         ref="responseContainer"
       >
         <div
