@@ -99,22 +99,35 @@ function clearPromptsAfterExpiration() {
 
 async function generateResponse() {
   if (!prompt.value) return;
+
+  //save prompt.value into a new variable
+  const currentPrompt = prompt.value;
+
+  //clear prompt from input field and focus the input field
+  prompt.value = "";
+  if (inputField.value) {
+    inputField.value.focus();
+  }
+
   isLoading.value = true;
   error.value = false;
   startLoadingAnimation();
 
+  //make a placeholder prompt to hold the prompt while the response is fetching
   promptsAndResponses.value.push({
-    prompt: prompt.value,
+    prompt: currentPrompt,
     response: "",
   });
 
+  //if a prompt is being generated push the prompt to the promptHistory ref
   if (!isRegenerating) {
     promptHistory.value.push({
-      prompt: prompt.value,
-      response: "",
+      prompt: currentPrompt,
+      
     });
   }
 
+  // the last index is the current index
   const currentIndex = promptsAndResponses.value.length - 1;
 
   await nextTick();
@@ -123,19 +136,14 @@ async function generateResponse() {
   try {
     const res = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt.value }],
+      messages: [{ role: "user", content: currentPrompt }],
       max_tokens: 100,
     });
     const newResponse = res.choices[0].message.content;
 
+    //replace the placeholder response with the generated response
     promptsAndResponses.value[currentIndex].response = newResponse;
 
-    if (!isRegenerating) {
-      promptHistory.value[promptHistory.value.length - 1].response =
-        newResponse;
-    }
-
-    prompt.value = "";
     savePromptsToLocalStorage();
     saveHistoryToLocalStorage();
   } catch (err) {

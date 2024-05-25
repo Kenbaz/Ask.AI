@@ -56,12 +56,20 @@ function clearPromptsAfterExpiration() {
 
 async function generateImage(description) {
   if (!prompt.value) return;
+
+  const currentPrompt = prompt.value;
+
+  prompt.value = ""
+  if (inputField.value) {
+    inputField.value.focus()
+  }
+
   isLoading.value = true;
   error.value = false;
   startLoadingAnimation();
 
   descriptionAndResponses.value.push({
-    prompt: prompt.value,
+    prompt: currentPrompt,
     response: "",
   });
 
@@ -81,7 +89,6 @@ async function generateImage(description) {
 
     descriptionAndResponses.value[currentIndex].response = imageUrl;
 
-    prompt.value = "";
     savePromptsToLocalStorage();
   } catch (err) {
     error.value = true;
