@@ -156,9 +156,6 @@ async function generateResponse() {
 
 function scrollToBottom() {
   if (responseContainer.value) {
-    console.log("scrollToBottom called");
-    console.log("scrollHeight:", responseContainer.value.scrollHeight);
-    console.log("clientHeight:", responseContainer.value.clientHeight);
     responseContainer.value.scroll({
       top: responseContainer.value.scrollHeight,
       behavior: "smooth",
@@ -223,8 +220,8 @@ onUnmounted(() => {
 
 <template>
   <!--Small and Medium screens UI-->
-  <div class="main-container h-screen w-full flex flex-col overflow-hidden pt-2 lg:hidden ">
-    <header class="lg:hidden flex-shrink-0 h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8">
+  <div class="main-container h-full w-full flex flex-col py-10 lg:hidden ">
+    <header class="lg:hidden h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8">
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
@@ -240,9 +237,9 @@ onUnmounted(() => {
       </button>
   </header>
 
-  <div class="flex flex-col pb-2 overflow-hidden w-full h-full justify-between gap-4">
+  <div class="flex flex-col w-full min-h-[95%] justify-between gap-4">
     <div
-        class="inner-content flex-grow flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
+        class="inner-content flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
         ref="responseContainer"
       >
         <div
@@ -275,7 +272,7 @@ onUnmounted(() => {
         </div>
       </div>
       <div
-    class="input-section h-[60px] flex-shrink-0 w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
   >
     <textarea
       ref="inputField"
@@ -305,10 +302,10 @@ onUnmounted(() => {
     />
     <div
       :class="['sidebar', { close: !sidebarVisible }]"
-      class="hidden overflow-auto lg:block lg:bg-hover_color"
+      class="hidden lg:block lg:bg-hover_color"
     >
       <h2 class="mt-14 font-semibold text-tinWhite">History</h2>
-      <ul class="h-auto">
+      <ul class="history-container max-h-[80%] overflow-y-auto w-full">
         <li
           v-for="(item, index) in promptHistory"
           :key="index"
@@ -330,7 +327,7 @@ onUnmounted(() => {
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
-      class="clear-icon hidden fixed z-10 top-[5px] left-[20px] h-[30px] cursor-pointer hover:bg-hover_color2 rounded-lg md:h-10 lg:h-[23px] lg:left-[70px] lg:block lg:top-[9px]"
+      class="clear-icon hidden fixed z-10 top-[5px] left-[20px] h-[30px] cursor-pointer hover:bg-hover_color2 rounded-lg md:h-10 lg:h-[23px] lg:left-[170px] lg:block lg:top-[9px]"
     />
 
     <div
@@ -405,6 +402,16 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
+.toggle-btn,
+.clear-icon {
+  transition: left 0.3s ease;
+}
+
+.sidebar.close ~ .toggle-btn,
+.sidebar.close ~ .clear-icon {
+  left: 70px; /* Adjust this as necessary */
+}
+
 .inner-content::-webkit-scrollbar {
   display: none;
 }
@@ -412,6 +419,21 @@ onUnmounted(() => {
 .clear-icon {
   font-size: 16px;
   padding: 10px 20px;
+}
+
+.history-container::-webkit-scrollbar {
+  background-color: transparent;
+  width: 10px;
+}
+
+.history-container::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+  border: 3px solid rgba(0, 0, 0, 0);
+}
+
+.history-container::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
 }
 
 .sidebar {
