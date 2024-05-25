@@ -223,7 +223,7 @@ onUnmounted(() => {
 
 <template>
   <!--Small and Medium screens UI-->
-  <div class="main-container w-full flex flex-col overflow-hidden pt-2 h-screen lg:hidden ">
+  <div class="main-container h-screen w-full flex flex-col overflow-hidden pt-2 lg:hidden ">
     <header class="lg:hidden flex-shrink-0 h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8">
     <font-awesome-icon
       @click="clearPrompts"
