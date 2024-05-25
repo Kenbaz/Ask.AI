@@ -220,7 +220,7 @@ onUnmounted(() => {
 
 <template>
   <!--Small and Medium screens UI-->
-  <div class="main-container h-full w-full flex flex-col pt-4 pb-10 lg:hidden ">
+  <div class="main-container h-full w-full flex flex-col pt-4 pb-3 lg:hidden ">
     <header class="lg:hidden h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8">
     <font-awesome-icon
       @click="clearPrompts"
@@ -237,7 +237,7 @@ onUnmounted(() => {
       </button>
   </header>
 
-  <div class="flex flex-col w-full min-h-[85%] justify-between gap-4">
+  <div class="flex flex-col w-full h-full justify-between gap-4">
     <div
         class="inner-content flex flex-grow flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
         ref="responseContainer"
@@ -332,11 +332,11 @@ onUnmounted(() => {
 
     <div
       :class="['content', { expanded: !sidebarVisible }]"
-      class="absolute hidden lg:block left-0 w-full h-[88%] lg:top-0 lg:left-[250px] lg:py-10 lg:content-custom xl:h-[98%]"
+      class="absolute hidden lg:block left-0 w-full h-[88%] lg:top-0 lg:left-[250px] lg:pt-5 lg:content-custom xl:h-[98%]"
     >
 
       <div
-        class="inner-content w-11/12 overflow-y-scroll m-auto min-h-[91%] lg:h-[105%] mb-2 lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[97%]"
+        class="inner-content w-11/12 overflow-y-scroll m-auto min-h-[91%] lg:h-[100%] mb-2 lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[90%]"
         ref="responseContainer"
       >
         <div
