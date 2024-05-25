@@ -156,8 +156,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="main-container w-full flex flex-col pt-4 pb-20 h-screen">
-    <header class=" h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8 lg:h-[50px]">
+  <div class="main-container w-full flex flex-col pt-4 pb-16 h-screen">
+    <header class=" h-16 border flex-shrink-0 border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8 lg:h-[50px]">
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
@@ -173,9 +173,9 @@ onUnmounted(() => {
       </button>
   </header>
   
-  <main class="flex flex-col flex-shrink-0 overflow-hidden w-full min-h-[98%] justify-between items-center gap-4 lg:min-h-full">
+  <main class="flex flex-col flex-shrink-0 overflow-hidden w-full min-h-full justify-between items-center gap-4 lg:min-h-full">
     <div
-        class="inner-content relative flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:w-[600px] xl:w-[800px] "
+        class="inner-content relative flex-grow flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:w-[600px] xl:w-[800px] "
         ref="responseContainer"
       >
         <div
@@ -206,7 +206,7 @@ onUnmounted(() => {
         </div>
       </div>
     <div
-    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+    class="input-section flex-shrink-0 h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
   >
     <textarea
       ref="inputField"
