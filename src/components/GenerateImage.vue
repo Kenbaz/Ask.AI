@@ -156,8 +156,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="main-container w-full flex flex-col py-10 h-screen ">
-    <header class="flex border border-t-0 pb-5 border-r-0 border-l-0 border-b-hover_color2 gap-4 items-center md:gap-8 lg:h-[50px]">
+  <div class="main-container w-full flex flex-col overflow-hidden pt-2 h-screen">
+    <header class="flex-shrink-0 h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8 lg:h-[50px]">
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
@@ -173,9 +173,9 @@ onUnmounted(() => {
       </button>
   </header>
   
-  <main class="flex flex-col py-7 w-full h-full justify-between gap-4">
+  <div class="flex flex-col flex-shrink-0 pb-[53px] border border-blue-800 overflow-hidden w-full h-full justify-between items-center gap-4 lg:pb-[40px]">
     <div
-        class="inner-content overflow-y-scroll h-full w-11/12 m-auto lg:w-[600px] lg:h-[80%] xl:w-[800px] xl:h-[83%] "
+        class="inner-content relative border flex-grow flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:w-[600px] xl:w-[800px] "
         ref="responseContainer"
       >
         <div
@@ -205,8 +205,8 @@ onUnmounted(() => {
           <button @click="regenerateImage(prompt)">Regenerate</button>
         </div>
       </div>
-      <div
-    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+    <div
+    class="input-section h-[60px] flex-shrink-0 w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
   >
     <textarea
       ref="inputField"
@@ -223,7 +223,7 @@ onUnmounted(() => {
       Ask
     </button>
   </div>
-  </main>
+</div>
  
   </div>
 </template>

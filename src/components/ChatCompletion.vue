@@ -223,8 +223,8 @@ onUnmounted(() => {
 
 <template>
   <!--Small and Medium screens UI-->
-  <div class="main-container w-full flex flex-col py-10 h-screen lg:hidden ">
-    <header class="lg:hidden h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-5 flex gap-4 items-center md:gap-8">
+  <div class="main-container w-full flex flex-col overflow-hidden pt-2 h-screen lg:hidden ">
+    <header class="lg:hidden flex-shrink-0 h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8">
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
@@ -240,9 +240,9 @@ onUnmounted(() => {
       </button>
   </header>
 
-  <div class="flex flex-col w-full py-7 h-full justify-between gap-4">
+  <div class="flex flex-col pb-2 border overflow-hidden w-full h-full justify-between gap-4">
     <div
-        class="inner-content flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
+        class="inner-content border flex-grow flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
         ref="responseContainer"
       >
         <div
@@ -269,13 +269,13 @@ onUnmounted(() => {
         >
           {{ loadingText }}
         </div>
-        <div v-if="error" class="error-message">
+        <div v-if="error" class="error-message flex-shrink-0">
           <p>Failed to generate</p>
           <button @click="regenerateResponse(prompt)">Regenerate</button>
         </div>
       </div>
       <div
-    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+    class="input-section h-[60px] flex-shrink-0 w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
   >
     <textarea
       ref="inputField"
