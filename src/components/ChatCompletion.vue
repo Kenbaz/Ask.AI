@@ -137,7 +137,7 @@ async function generateResponse() {
     const res = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: currentPrompt }],
-      max_tokens: 100,
+      
     });
     const newResponse = res.choices[0].message.content;
 
