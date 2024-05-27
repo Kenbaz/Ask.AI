@@ -43,9 +43,6 @@ function loadHistoryFromLocalStorage() {
 
     if (now - timestamp < EXPIRATION_TIME) {
       promptHistory.value = JSON.parse(storedHistory);
-    } else {
-      localStorage.removeItem(HISTORY_KEY);
-      localStorage.removeItem(HISTORY_TIMESTAMP_KEY);
     }
   }
 }
@@ -75,9 +72,6 @@ function loadPromptsFromLocalStorage() {
 
     if (now - timestamp < EXPIRATION_TIME) {
       promptsAndResponses.value = JSON.parse(storedPrompts);
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(STORAGE_TIMESTAMP_KEY);
     }
   }
 }
@@ -417,7 +411,7 @@ onUnmounted(() => {
 
 .sidebar.close ~ .toggle-btn,
 .sidebar.close ~ .clear-icon {
-  left: 70px; /* Adjust this as necessary */
+  left: 70px;
 }
 
 .inner-content::-webkit-scrollbar {
@@ -452,7 +446,6 @@ onUnmounted(() => {
   width: 250px;
   padding: 10px 14px;
   border-right: 1px solid #18191a;
-  /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
   transition: transform 0.3s ease;
 }
 
@@ -550,8 +543,4 @@ p {
   pointer-events: none;
 }
 
-/* .shimmer-button .text-tinWhite {
-  position: relative;
-  z-index: 2;
-} */
 </style>

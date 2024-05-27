@@ -32,9 +32,6 @@ function loadPromptsFromLocalStorage() {
 
     if (now - timestamp < EXPIRATION_TIME) {
       descriptionAndResponses.value = JSON.parse(storedPrompts);
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(STORAGE_TIMESTAMP_KEY);
     }
   }
 }
@@ -259,17 +256,6 @@ onUnmounted(() => {
   padding: 10px 20px;
 }
 
-/* .content {
-  position: absolute;
-  top: 0;
-  left: 250px;
-  height: 100vh;
-  width: calc(100% - 250px);
-  flex-grow: 1;
-  padding: 20px;
-  transition: left 0.3s ease, width 0.3s ease;
-} */
-
 .prompt-container {
   display: flex;
   flex-direction: column;
@@ -308,28 +294,13 @@ onUnmounted(() => {
 
 textarea {
   outline: none;
-  /* border: 1px solid; */
   resize: none;
 }
-
-/* .enter-btn {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  top: 4.5px;
-  right: 10px;
-} */
 
 div {
   text-align: center;
   margin-bottom: 20px;
 }
-
-/* p {
-  font-size: 18px;
-  white-space: pre-wrap;
-} */
 
 .loading-message,
 .error-message {
