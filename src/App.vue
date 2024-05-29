@@ -4,9 +4,7 @@ import ErrorBoundary from './components/ErrorBoundary.vue';
 
 <template>
   <div id="app">
-    <nav>
       <RouterLink to="/"></RouterLink>
-    </nav>
     <ErrorBoundary>
       <RouterView></RouterView>
     </ErrorBoundary>
