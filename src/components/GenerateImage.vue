@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick, computed } from "vue";
 import openai from "../config/openaiConfig.js";
+// import { icon } from "@fortawesome/fontawesome-svg-core";
 
 const descriptionAndResponses = ref([]);
 const prompt = ref("");
@@ -102,6 +103,24 @@ async function generateImage(description) {
   }
 }
 
+function downloadImage(imageUrl, fileName) {
+  fetch(imageUrl)
+    .then(response => response.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    })
+    .catch(error => {
+      console.error('Error downloading image:', error)
+    })
+}
+
 function scrollToBottom() {
   if (responseContainer.value) {
     responseContainer.value.scroll({
@@ -142,6 +161,30 @@ function stopLoadingAnimation() {
   loadingDots.value = 0;
 }
 
+function adjustTextareaHeight() {
+  if (inputField.value) {
+    inputField.value.style.height = "auto"; // Reset height to auto to shrink if needed
+    const scrollHeight = inputField.value.scrollHeight;
+
+    // Set the new height or keep it at max-height
+    inputField.value.style.height = `${Math.min(scrollHeight, 200)}px`; 
+
+     // If scrollHeight exceeds 150px, enable scroll
+    if (scrollHeight > 200) {
+      inputField.value.style.overflowY = "auto"; // Enable scrolling
+      
+    } else {
+      inputField.value.style.overflowY = "hidden"; // Disable scrolling when under max-height
+    }
+  }
+}
+
+const buttonStyle = computed(() => ({
+  backgroundColor: prompt.value.trim() ? "white" : "#3a3b3c",
+  color: prompt.value.trim() ? "#374151" : "white",
+  borderColor: prompt.value.trim() ? "white" : "#3a3b3c",
+}));
+
 const loadingText = computed(() => {
   return "Generating" + ".".repeat(loadingDots.value);
 });
@@ -161,7 +204,7 @@ onUnmounted(() => {
 
 <template>
   <div class="main-container md:block lg:block w-full flex flex-col pt-4 h-screen md:pt-10 lg:pt-5">
-    <header class=" h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:pb-5 md:gap-8 lg:h-[50px]">
+    <header class=" h-16 border fixed left-0 right-0 z-50 bg-primary border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:pb-5 md:gap-8 lg:h-[50px]">
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
@@ -177,9 +220,9 @@ onUnmounted(() => {
       </button>
   </header>
   
-  <main class="flex flex-col w-full h-full overflow-auto justify-between items-center gap-4 md:h-[95%] lg:h-[93%] xl:h-[95%]">
+  <main class="content-container grid grid-cols-1 mt-[4rem] lg:mt-[3.1rem] w-full h-full overflow-auto justify-between items-center gap-3 md:h-[95%] lg:h-[93%] xl:h-[94%] box-border">
     <div
-        class="inner-content flex-grow flex flex-col overflow-y-scroll w-11/12 m-auto h-full lg:w-[600px] xl:w-[800px] "
+        class="inner-content flex-grow flex flex-col min-h-[91%] pb-10 overflow-y-scroll w-11/12 m-auto h-full lg:w-[600px] xl:w-[800px] "
         ref="responseContainer"
       >
         <div
@@ -196,6 +239,15 @@ onUnmounted(() => {
           </div>
           <div class="prompt-response w-full text-tinWhite text-base">
               <img :src="item.response" class="w-60" />
+              <button
+                v-if="item.response"
+                @click="downloadImage(item.response, `image_${index}.png`)"
+                >
+                <font-awesome-icon
+                :icon="['fas', 'download']"
+                
+                />
+              </button>
           </div>
         </div>
         <div
@@ -210,19 +262,21 @@ onUnmounted(() => {
         </div>
       </div>
     <div
-    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+    class="input-section h-auto w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex items-end md:rounded-[40px] lg:w-[650px] lg:rounded-[40px] xl:w-[850px]"
   >
     <textarea
       ref="inputField"
-      class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
+      class="text-tinWhite rounded-[30px] w-[83%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[88%] lg:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
       v-model="prompt"
       placeholder="Ask anything.."
       @keydown.enter.prevent="generateImage(prompt)"
-      rows="2"
+      rows="1"
+      @input="adjustTextareaHeight"
     ></textarea>
     <button
-      class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
+      class="enter-btn self-end absolute right-[9px] bottom-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:bottom-[4px] md:right-[12px] md:text-xl md:text-center lg:right-[10px] lg:bottom-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
       @click="generateImage(prompt)"
+      :style="buttonStyle"
     >
       Ask
     </button>
@@ -254,6 +308,10 @@ onUnmounted(() => {
 .clear-icon {
   font-size: 16px;
   padding: 10px 20px;
+}
+
+.content-container {
+  grid-template-rows: 1fr auto;
 }
 
 .prompt-container {
@@ -295,6 +353,17 @@ onUnmounted(() => {
 textarea {
   outline: none;
   resize: none;
+}
+
+textarea::-webkit-scrollbar {
+  background-color: #555;
+  width: 10px
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid rgba(0, 0, 0, 0);
 }
 
 div {

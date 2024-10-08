@@ -7,6 +7,7 @@ const promptHistory = ref([]);
 const prompt = ref("");
 const sidebarVisible = ref(true);
 const inputField = ref(null);
+const inputField2 = ref(null);
 const isLoading = ref(false);
 const error = ref(false);
 const loadingDots = ref(0);
@@ -201,6 +202,50 @@ function stopLoadingAnimation() {
   loadingDots.value = 0;
 }
 
+function adjustTextareaHeight() {
+  if (inputField.value) {
+    inputField.value.style.height = "auto"; // Reset height to auto to shrink if needed
+    const scrollHeight = inputField.value.scrollHeight;
+
+    // Set the new height or keep it at max-height
+    inputField.value.style.height = `${Math.min(scrollHeight, 200)}px`; 
+
+     // If scrollHeight exceeds 150px, enable scroll
+    if (scrollHeight > 200) {
+      inputField.value.style.overflowY = "auto"; // Enable scrolling
+      
+    } else {
+      inputField.value.style.overflowY = "hidden"; // Disable scrolling when under max-height
+    }
+  }
+}
+
+function adjustTextareaHeight2() {
+  if (inputField2.value) {
+    inputField2.value.style.height = "auto"; // Reset height to auto to shrink if needed
+    const scrollHeight = inputField2.value.scrollHeight;
+
+    // Set the new height or keep it at max-height
+    inputField2.value.style.height = `${Math.min(scrollHeight, 200)}px`; 
+
+     // If scrollHeight exceeds 150px, enable scroll
+    if (scrollHeight > 200) {
+      inputField2.value.style.overflowY = "auto"; // Enable scrolling
+      
+    } else {
+      inputField2.value.style.overflowY = "hidden"; // Disable scrolling when under max-height
+    }
+  }
+}
+
+
+const buttonStyle = computed(() => ({
+  backgroundColor: prompt.value.trim() ? "white" : "#3a3b3c",
+  color: prompt.value.trim() ? "#374151" : "white",
+  borderColor: prompt.value.trim() ? "white" : "#3a3b3c",
+}));
+
+
 const loadingText = computed(() => {
   return "Generating" + ".".repeat(loadingDots.value);
 });
@@ -222,71 +267,68 @@ onUnmounted(() => {
 
 <template>
   <!--Small and Medium screens UI-->
-  <div class="main-container h-full w-full overflow-auto flex flex-col pt-4 pb-3 lg:hidden ">
-    <header class="lg:hidden h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8">
+  <div class="main-container h-screen w-full overflow-auto flex flex-col pt-4 pb-3 lg:hidden">
+  <header class="lg:hidden fixed z-50 top-0 bg-primary right-0 left-0 h-16 border border-t-0 border-r-0 border-l-0 border-b-hover_color2 pb-2 flex gap-4 items-center md:gap-8">
     <font-awesome-icon
       @click="clearPrompts"
       :icon="['fas', 'edit']"
       class="clear-icon ml-4 z-10 top-[4px] h-[24px] cursor-pointer hover:bg-hover_color2 rounded-lg md:-top-[0px] md:h-10 lg:h-[23px] lg:left-[70px] lg:top-[9px]"
     />
     <button
-        type="button"
-        class="shimmer-button relative text-center mt-6 bg-hover_color2 w-40 p-1 rounded-lg -top-2 md:-top-[11px] md:text-2xl md:w-56 md:p-2 lg:hidden"
-      >
-        <RouterLink class="text-tinWhite font-semibold" to="/image-generation"
-          >Image generation</RouterLink
-        >
-      </button>
+      type="button"
+      class="shimmer-button relative text-center mt-6 bg-hover_color2 w-40 p-1 rounded-lg -top-2 md:-top-[11px] md:text-2xl md:w-56 md:p-2 lg:hidden"
+    >
+      <RouterLink class="text-tinWhite font-semibold" to="/image-generation">
+        Image generation
+      </RouterLink>
+    </button>
   </header>
 
-  <div class="flex flex-col w-full h-full justify-between gap-4">
+  <div class="content-container grid grid-cols-1 mt-[3.1rem] pb-2 md:pb-4 w-full h-screen justify-between gap-4 box-border">
     <div
-        class="inner-content flex flex-grow flex-col overflow-y-scroll w-11/12 m-auto h-full lg:hidden "
-        ref="responseContainer"
-      >
-        <div
-          v-if="promptsAndResponses.length === 0"
-          class="placeholder text-3xl font-bold md:text-4xl lg:text-3xl"
-        >
-          ASK<span class="text-base font-semibold">.AI</span>
-        </div>
-        <div v-for="(item, index) in promptsAndResponses" :key="index">
-          <div
-            class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-white text-base md:text-2xl lg:text-base"
-          >
-            {{ item.prompt }}
-          </div>
-          <div
-            class="prompt-response justify-tex text-white text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
-          >
-            {{ item.response.trim() }}
-          </div>
+      class="inner-content pb-10 flex min-h-[91%] flex-grow flex-col overflow-y-scroll w-[94%] m-auto h-full lg:hidden"
+      ref="responseContainer"
+    >
+      <div v-if="promptsAndResponses.length === 0" class="placeholder text-3xl font-bold md:text-4xl lg:text-3xl">
+        ASK<span class="text-base font-semibold">.AI</span>
+      </div>
+      <div v-for="(item, index) in promptsAndResponses" :key="index">
+        <div class="prompt-container rounded-xl bg-hover_color2 h-auto p-2 text-white text-base md:text-2xl lg:text-base">
+          {{ item.prompt }}
         </div>
         <div
-          v-if="isLoading"
-          class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl"
+          class="prompt-response text-white text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
         >
-          {{ loadingText }}
-        </div>
-        <div v-if="error" class="error-message flex-shrink-0">
-          <p>Failed to generate</p>
-          <button @click="regenerateResponse(prompt)">Regenerate</button>
+          {{ item.response.trim() }}
         </div>
       </div>
-      <div
-    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+      <div v-if="isLoading" class="loading-message text-base bg-hover_color2 text-tinWhite p-2 rounded-xl">
+        {{ loadingText }}
+      </div>
+      <div v-if="error" class="error-message flex-shrink-0">
+        <p>Failed to generate</p>
+        <button @click="regenerateResponse(prompt)">Regenerate</button>
+      </div>
+    </div>
+
+    <!-- Updated input-section -->
+     <div
+    class="input-section w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color lg:items-end lg:max-h-[200px] flex lg:w-[650px] lg:h-auto lg:rounded-[40px] xl:w-[850px] lg:bottom-0"
   >
     <textarea
-      ref="inputField"
-      class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
+      ref="inputField2"
+      class="text-tinWhite rounded-[30px] w-[84%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[88%] bg-hover_color lg:p-[15px] lg:max-h-[200px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:h-full lg:rounded-[40px] overflow-y-auto"
       v-model="prompt"
       placeholder="Ask anything.."
       @keydown.enter.prevent="generateResponse"
-      rows="2"
+       @input="adjustTextareaHeight2"
+      rows="1"
+      
     ></textarea>
     <button
-      class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
+      class="enter-btn self-end absolute right-[5px] bottom-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:bottom-[4px] md:right-[10px] md:text-xl md:text-center lg:right-[14px] lg:bottom-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
       @click="generateResponse"
+      :style="buttonStyle"
     >
       Ask
     </button>
@@ -294,9 +336,10 @@ onUnmounted(() => {
   </div>
 </div>
 
+
   <!--Large screens UI-->
 
-<main class="content-container hidden h-screen lg:block ">
+<main class="hidden h-screen lg:block ">
     <font-awesome-icon
       @click="toggleSidebar"
       class="z-10 toggle-btn h-[23px] hover:bg-hover_color2 hover:rounded-lg hidden lg:block"
@@ -334,11 +377,11 @@ onUnmounted(() => {
 
     <div
       :class="['content', { expanded: !sidebarVisible }]"
-      class="absolute hidden lg:block left-0 w-full h-[88%] lg:top-0 lg:left-[250px] lg:pt-5 lg:content-custom xl:h-[98%]"
+      class="content-container absolute hidden lg:grid grid-cols-1 left-0 w-full h-full lg:top-0 lg:left-[250px] lg:pb-4 lg:pt-5 gap-2 lg:content-custom xl:h-[100vh] xl:pb-4 box-border"
     >
 
       <div
-        class="inner-content w-11/12 overflow-y-scroll m-auto min-h-[91%] lg:h-[100%] mb-2 lg:w-[600px] lg:rounded-xl xl:w-[800px] xl:h-[90%]"
+        class="inner-content w-11/12 overflow-y-scroll m-auto min-h-[91%] lg:h-[100%] lg:w-[600px] pb-10 lg:rounded-xl xl:w-[800px] xl:h-[100%]"
         ref="responseContainer"
       >
         <div
@@ -354,7 +397,7 @@ onUnmounted(() => {
             {{ item.prompt }}
           </div>
           <div
-            class="prompt-response justify-text text-tinWhite text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
+            class="prompt-response text-tinWhite text-pretty text-base leading-8 md:text-xl md:leading-8 lg:text-base lg:leading-8"
           >
             {{ item.response.trim() }}
           </div>
@@ -371,19 +414,22 @@ onUnmounted(() => {
         </div>
       </div>
       <div
-    class="input-section h-[60px] w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color flex md:rounded-[40px] md:h-[80px] lg:w-[650px] lg:h-[60px] lg:rounded-[40px] xl:w-[850px]"
+    class="input-section w-11/12 m-auto rounded-[30px] border border-hover_color2 relative bg-hover_color lg:items-end lg:max-h-[200px] flex lg:w-[650px] lg:h-auto lg:rounded-[40px] xl:w-[850px] lg:bottom-0"
   >
     <textarea
       ref="inputField"
-      class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:rounded-[40px]"
+      class="text-tinWhite rounded-[30px] w-[85%] p-[15px] text-[18px] placeholder:font-semibold md:p-[20px] md:rounded-[40px] md:text-xl md:w-[90%] bg-hover_color lg:p-[15px] lg:max-h-[200px] lg:text-[18px] lg:placeholder:font-semibold lg:placeholder:text-base lg:h-full lg:rounded-[40px] overflow-y-auto"
       v-model="prompt"
       placeholder="Ask anything.."
       @keydown.enter.prevent="generateResponse"
-      rows="2"
+       @input="adjustTextareaHeight"
+      rows="1"
+      
     ></textarea>
     <button
-      class="enter-btn absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[10px] lg:top-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
+      class="enter-btn self-end absolute right-[10px] top-[7px] h-[45px] w-[45px] border border-hover_color2 rounded-full text-base text-tinWhite bg-hover_color2 font-bold md:h-[60px] md:w-[60px] md:top-[8px] md:right-[14px] md:text-xl md:text-center lg:right-[14px] lg:bottom-[7px] lg:h-[45px] lg:w-[45px] lg:font-semibold lg:text-base"
       @click="generateResponse"
+      :style="buttonStyle"
     >
       Ask
     </button>
@@ -416,6 +462,10 @@ onUnmounted(() => {
 
 .inner-content::-webkit-scrollbar {
   display: none;
+}
+
+.content-container {
+  grid-template-rows: 1fr auto;
 }
 
 .clear-icon {
@@ -483,12 +533,27 @@ onUnmounted(() => {
 .input-section {
   max-width: 100%;
   margin: 0 auto;
+  align-items: flex-end;
+  box-sizing: border-box;
+  transition: height 0.3s ease;
 }
 
 textarea {
-  height: 100%;
   outline: none;
   resize: none;
+  transition: height 0.3s ease;
+  box-sizing: border-box;
+}
+
+textarea::-webkit-scrollbar {
+  background-color: #555;
+  width: 10px
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid rgba(0, 0, 0, 0);
 }
 
 p {
