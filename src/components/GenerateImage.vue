@@ -104,21 +104,26 @@ async function generateImage(description) {
 }
 
 function downloadImage(imageUrl, fileName) {
-  fetch(imageUrl)
-    .then(response => response.blob())
-    .then(blob => {
+  const proxyUrl = `/api/download-image?url=${encodeURIComponent(imageUrl)}`;
+
+  fetch(proxyUrl)
+    .then(response => {
+      const fileExtension = response.headers.get('X-File-Extension') || 'png';
+      return Promise.all([response.blob(), Promise.resolve(fileExtension)]);
+    })
+    .then(([blob, fileExtension]) => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = fileName;
+      link.download = `${fileName}.${fileExtension}`;  // Use the correct file extension
       document.body.appendChild(link);
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
     })
     .catch(error => {
-      console.error('Error downloading image:', error)
-    })
+      console.error('Error downloading image:', error);
+    });
 }
 
 function scrollToBottom() {
@@ -241,7 +246,7 @@ onUnmounted(() => {
               <img :src="item.response" class="w-60" />
               <button
                 v-if="item.response"
-                @click="downloadImage(item.response, `image_${index}.png`)"
+                @click="downloadImage(item.response, `generated_image_${index}`)"
                 >
                 <font-awesome-icon
                 :icon="['fas', 'download']"
